@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if boards|length %}
+<ul>
+        {% for board_name in boards %}
+    <li>{{ board_name }}</li>
+        {% endfor %}
+</ul>
+    {% else %}
+<h3>You don't have any boards yet. Why don't you create one?</h3>
+    {% endif %}
+
+<form action="" method="post" novalidate>
+    <div>
+        <label>
+            Board name: <input type="text" name="board_name" value="{{ board_name }}" required/>
+        </label>
+        <button>Create</button>
+    </div>
+    <div>
+        <p style="color: firebrick;">{{ error }}</p>
+    </div>
+</form>
+{% endblock %}
