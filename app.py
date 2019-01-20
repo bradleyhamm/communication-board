@@ -1,3 +1,4 @@
+import sqlite3
 from flask import Flask, redirect, url_for, render_template, request
 from database import Database, add_image, create_board, get_boards
 
@@ -12,15 +13,16 @@ def index():
 @app.route("/boards", methods=['GET', 'POST'])
 def boards():
     error = board_name = ''
-    boards = get_boards()
     if request.method == 'POST':
         board_name = request.form['board_name']
         if not board_name:
             error = 'Please enter a name for your board'
-        elif board_name in boards:
-            error = 'That board name is already in use; please try another'
         else:
-            create_board(board_name)
+            try:
+                create_board(board_name)
+            except sqlite3.IntegrityError:
+                error = 'That board name is already in use; please try another'
+    boards = get_boards()
     return render_template('boards.html', boards=boards, value=board_name, error=error)
 
 

@@ -5,6 +5,7 @@ class Database(object):
 
     def __init__(self):
         self.connection = sqlite3.connect('data.db')
+        self.connection.row_factory = sqlite3.Row
         self.cursor = self.connection.cursor()
 
     def close(self):
@@ -55,5 +56,6 @@ def create_board(name):
 
 def get_boards():
     db = Database()
-    db.cursor.execute('SELECT name FROM BOARDS')
-    return [board[0] for board in db.cursor.fetchall()]
+    db.cursor.execute('SELECT id, name FROM BOARDS')
+    return db.cursor.fetchall()
+

@@ -1,25 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="row">
+    <div class="twelve columns">
+        <h5>Available Boards:</h5>
     {% if boards|length %}
-<ul>
-        {% for board_name in boards %}
-    <li>{{ board_name }}</li>
+        <ul>
+        {% for board in boards %}
+            <li><a href="/boards/{{ board['id'] }}">{{ board['name'] }}</a></li>
         {% endfor %}
-</ul>
+        </ul>
     {% else %}
-<h3>You don't have any boards yet. Why don't you create one?</h3>
+        <h3>You don't have any boards yet. Why don't you create one?</h3>
     {% endif %}
+    </div>
+</div>
 
-<form action="" method="post" novalidate>
-    <div>
-        <label>
-            Board name: <input type="text" name="board_name" value="{{ board_name }}" required/>
-        </label>
-        <button>Create</button>
+<div class="row">
+    <div class="twelve columns">
+        <form action="" method="post" novalidate>
+            <label for="board_name_input">Board name</label>
+            <input type="text" name="board_name" id="board_name_input" value="{{ board_name }}" required/>
+            <input class="button-primary" type="submit" value="Create">
+            <p class="error-message">{{ error }}</p>
+        </form>
     </div>
-    <div>
-        <p style="color: firebrick;">{{ error }}</p>
-    </div>
-</form>
+</div>
 {% endblock %}
