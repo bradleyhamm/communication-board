@@ -41,7 +41,7 @@ def execute(query, params=()):
 
 
 def create_board(name):
-    get_db().execute('INSERT INTO boards (name) VALUES (?)', (name,))
+    execute('INSERT INTO boards (name) VALUES (?)', (name,))
 
 
 def get_boards():
