@@ -16,6 +16,7 @@ ENV/
 env.bak/
 venv.bak/
 
-data.db
+.pytest_cache/
 
+data.db
 static/uploads/
