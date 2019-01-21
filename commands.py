@@ -1,14 +1,7 @@
 from app import app
-from database import Database
+from database import create_db
 
 
 @app.cli.command('create-db')
 def create_database():
-    database = Database()
-    database.create()
-
-
-@app.cli.command('destroy-db')
-def destroy_database():
-    database = Database()
-    database.destroy()
+    create_db()

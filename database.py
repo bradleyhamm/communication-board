@@ -1,68 +1,61 @@
+from flask import g
 import sqlite3
+from app import app
+
+DATABASE_FILE = 'data.db'
+app.config['DATABASE'] = DATABASE_FILE
 
 
-class Database(object):
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(app.config['DATABASE'])
+        g.db.row_factory = sqlite3.Row
+    return g.db
 
-    def __init__(self):
-        self.connection = sqlite3.connect('data.db')
-        self.connection.row_factory = sqlite3.Row
-        self.cursor = self.connection.cursor()
 
-    def close(self):
-        self.connection.close()
+def close_db():
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
-    def create(self):
-        self.cursor.executescript('''
-            DROP TABLE IF EXISTS boards;
-            CREATE TABLE IF NOT EXISTS boards (
-                id integer PRIMARY KEY AUTOINCREMENT,
-                name text NOT NULL UNIQUE
-            );
 
-            DROP TABLE IF EXISTS images;
-            CREATE TABLE IF NOT EXISTS images (
-                id integer PRIMARY KEY AUTOINCREMENT,
-                filename text NOT NULL UNIQUE,
-                board_id integer NOT NULL,
-                FOREIGN KEY (board_id) REFERENCES boards(id)
-            );
-        ''')
-        self.connection.commit()
+def create_db():
+    db = get_db()
+    with app.open_resource('schema.sql') as f:
+        db.executescript(f.read().decode('utf-8'))
 
-    def destroy(self):
-        self.cursor.execute('''
-            DROP TABLE IF EXISTS images;
-            DROP TABLE IF EXISTS boards;
-        ''')
-        self.connection.commit()
+
+def fetchone(query, params=()):
+    with get_db() as db:
+        return db.execute(query, params).fetchone()
+
+
+def fetchall(query, params=()):
+    with get_db() as db:
+        return db.execute(query, params).fetchall()
+
+
+def execute(query, params=()):
+    with get_db() as db:
+        db.execute(query, params)
 
 
 def create_board(name):
-    db = Database()
-    db.cursor.execute('INSERT INTO boards (name) VALUES (?)', (name,))
-    db.connection.commit()
+    get_db().execute('INSERT INTO boards (name) VALUES (?)', (name,))
 
 
 def get_boards():
-    db = Database()
-    db.cursor.execute('SELECT id, name FROM BOARDS')
-    return db.cursor.fetchall()
+    return fetchall('SELECT id, name FROM BOARDS')
 
 
 def get_board(board_id):
-    db = Database()
-    db.cursor.execute('SELECT id, name from BOARDS WHERE id = ?', (board_id,))
-    return db.cursor.fetchone()
+    return fetchone('SELECT id, name from BOARDS WHERE id = ?', (board_id,))
 
 
 def add_image(filename, board_id):
-    db = Database()
-    db.cursor.execute('INSERT INTO images (filename, board_id) VALUES (?, ?)',
-                      (filename, board_id,))
-    db.connection.commit()
+    execute('INSERT INTO images (filename, board_id) VALUES (?, ?)',
+            (filename, board_id,))
 
 
 def get_images(board_id):
-    db = Database()
-    db.cursor.execute('SELECT filename FROM images WHERE board_id = ?', (board_id,))
-    return db.cursor.fetchall()
+    return fetchall('SELECT filename FROM images WHERE board_id = ?', (board_id,))
