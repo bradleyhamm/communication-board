@@ -44,17 +44,25 @@ def create_board(name):
     execute('INSERT INTO boards (name) VALUES (?)', (name,))
 
 
+def delete_board(id):
+    execute('DELETE FROM boards WHERE id = ?', (id,))
+
+
 def get_boards():
     return fetchall('SELECT id, name FROM BOARDS')
 
 
-def get_board(board_id):
-    return fetchone('SELECT id, name from BOARDS WHERE id = ?', (board_id,))
+def get_board(id):
+    return fetchone('SELECT id, name from BOARDS WHERE id = ?', (id,))
 
 
 def add_image(filename, board_id):
     execute('INSERT INTO images (filename, board_id) VALUES (?, ?)',
             (filename, board_id,))
+
+
+def delete_image(id):
+    execute('DELETE FROM images WHERE id = ?', (id,))
 
 
 def get_images(board_id):
