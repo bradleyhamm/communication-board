@@ -38,10 +38,10 @@ def boards():
     return render_template('boards.html', boards=boards, value=board_name, error=error)
 
 
-def resize_image(file_path):
-    image = Image.open(file_path)
+def resize_image(image_path):
+    image = Image.open(image_path)
     image.thumbnail((400, 400))
-    image.save(file_path, image.format)
+    image.save(image_path, image.format)
 
 
 @app.route("/boards/<board_id>", methods=['GET', 'POST'])
