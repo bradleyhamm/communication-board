@@ -41,7 +41,10 @@ def execute(query, params=()):
 
 
 def create_board(name):
-    execute('INSERT INTO boards (name) VALUES (?)', (name,))
+    with get_db() as db:
+        cursor = db.cursor()
+        cursor.execute('INSERT INTO boards (name) VALUES (?)', (name,))
+        return cursor.lastrowid
 
 
 def delete_board(id):

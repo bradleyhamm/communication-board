@@ -23,6 +23,13 @@
         <form action="" method="post" novalidate>
             <label for="board_name_input">Board name</label>
             <input type="text" name="board_name" id="board_name_input" value="{{ board_name }}" required/>
+            <label for="auto_populate_input">Auto-populate</label>
+            <input type="checkbox" name="auto_populate" id="auto_populate_input"
+    {% if auto_populate %}
+                   checked="checked"
+    {% endif %}
+            />
+            <br/>
             <input class="button-primary" type="submit" value="Create">
             <p class="error-message">{{ error }}</p>
         </form>

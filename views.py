@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from app import app
 from database import create_board, get_boards, get_board, get_images, add_image
 from PIL import Image
+from board import ImageFinder
 
 
 ALLOWED_EXTENSIONS = 'png jpeg jpg gif'.split()
@@ -24,6 +25,7 @@ def index():
 
 @app.route("/boards", methods=['GET', 'POST'])
 def boards():
+    auto_populate = False
     error = board_name = ''
     if request.method == 'POST':
         board_name = request.form['board_name']
@@ -31,11 +33,17 @@ def boards():
             error = 'Please enter a name for your board'
         else:
             try:
-                create_board(board_name)
+                board_id = create_board(board_name)
             except sqlite3.IntegrityError:
                 error = 'That board name is already in use; please try another'
+            else:
+                auto_populate = request.form['auto_populate']
+                if auto_populate:
+                    for filename in ImageFinder(board_name):
+                        add_image(filename, board_id)
+                return redirect(url_for('boards'))
     boards = get_boards()
-    return render_template('boards.html', boards=boards, value=board_name, error=error)
+    return render_template('boards.html', boards=boards, board_name=board_name, auto_populate=auto_populate, error=error)
 
 
 def resize_image(image_path):
