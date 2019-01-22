@@ -5,8 +5,7 @@ from flask import redirect, url_for, request, render_template
 from werkzeug.utils import secure_filename
 from app import app
 from database import create_board, get_boards, get_board, get_images, add_image
-from PIL import Image
-from board import ImageFinder
+from image import ImageFinder, resize_image
 
 
 ALLOWED_EXTENSIONS = 'png jpeg jpg gif'.split()
@@ -42,14 +41,8 @@ def boards():
                     for filename in ImageFinder(board_name):
                         add_image(filename, board_id)
                 return redirect(url_for('boards'))
-    boards = get_boards()
-    return render_template('boards.html', boards=boards, board_name=board_name, auto_populate=auto_populate, error=error)
-
-
-def resize_image(image_path):
-    image = Image.open(image_path)
-    image.thumbnail((400, 400))
-    image.save(image_path, image.format)
+    return render_template('boards.html', boards=get_boards(), board_name=board_name, auto_populate=auto_populate,
+                           error=error)
 
 
 @app.route("/boards/<board_id>", methods=['GET', 'POST'])
@@ -71,6 +64,5 @@ def board(board_id):
                 file.save(file_path)
                 resize_image(file_path)
                 return redirect(url_for('board', board_id=board_id))
-    board = get_board(board_id)
     images = get_images(board_id)
-    return render_template('board.html', board=board, images=images, error=error)
+    return render_template('board.html', board=get_board(board_id), images=images, error=error)

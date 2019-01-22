@@ -6,8 +6,15 @@ import string
 import random
 import concurrent.futures
 from werkzeug.utils import secure_filename
+from PIL import Image
 
 IMAGE_API_URL = 'https://openclipart.org/search/json/?query=%s'
+
+
+def resize_image(image_path):
+    image = Image.open(image_path)
+    image.thumbnail((250, 250))
+    image.save(image_path, image.format)
 
 
 class ImageFinder(object):

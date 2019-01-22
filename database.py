@@ -47,16 +47,16 @@ def create_board(name):
         return cursor.lastrowid
 
 
-def delete_board(id):
-    execute('DELETE FROM boards WHERE id = ?', (id,))
+def delete_board(board_id):
+    execute('DELETE FROM boards WHERE id = ?', (board_id,))
 
 
 def get_boards():
     return fetchall('SELECT id, name FROM BOARDS')
 
 
-def get_board(id):
-    return fetchone('SELECT id, name from BOARDS WHERE id = ?', (id,))
+def get_board(board_id):
+    return fetchone('SELECT id, name from BOARDS WHERE id = ?', (board_id,))
 
 
 def add_image(filename, board_id):
