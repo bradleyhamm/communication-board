@@ -1,4 +1,5 @@
 import os
+import urllib
 import urllib3
 import requests
 import string
@@ -6,7 +7,7 @@ import random
 import concurrent.futures
 from werkzeug.utils import secure_filename
 
-IMAGE_API_URL = 'https://openclipart.org/search/json/?query={term}&amount=20'
+IMAGE_API_URL = 'https://openclipart.org/search/json/?query=%s'
 
 
 class ImageFinder(object):
@@ -17,7 +18,8 @@ class ImageFinder(object):
         self.image_urls = self.get_image_urls()
 
     def get_image_urls(self):
-        res = requests.get(IMAGE_API_URL)
+        url = IMAGE_API_URL % urllib.parse.quote(self.search_term)
+        res = requests.get(url)
         res.raise_for_status()
         try:
             json = res.json()
