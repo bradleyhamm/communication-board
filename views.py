@@ -36,7 +36,7 @@ def boards():
             except sqlite3.IntegrityError:
                 error = 'That board name is already in use; please try another'
             else:
-                auto_populate = request.form['auto_populate']
+                auto_populate = request.form.get('auto_populate', False)
                 if auto_populate:
                     for filename in ImageFinder(board_name):
                         add_image(filename, board_id)
