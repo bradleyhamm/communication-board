@@ -1,8 +1,6 @@
 import os
 import unittest
 import tempfile
-import sys
-sys.path.append('..')
 from comboard import comboard_app
 from comboard import database
 
