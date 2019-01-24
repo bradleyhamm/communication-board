@@ -46,7 +46,7 @@ class ImageFinder(object):
         """
         Downloads the image from the given URL to the uploads folder.
         """
-        from views import UPLOAD_FOLDER
+        from comboard.views import UPLOAD_FOLDER
         filename = self._get_filename()
         r = self.download_session.request('GET', url)
         with open(os.path.join(UPLOAD_FOLDER, filename), 'wb') as f:

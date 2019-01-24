@@ -3,26 +3,25 @@ import time
 import sqlite3
 from flask import redirect, url_for, request, render_template
 from werkzeug.utils import secure_filename
-from app import app
-from database import create_board, get_boards, get_board, get_images, add_image
-from image import ImageFinder, resize_image
+from comboard import comboard_app
+from comboard.database import create_board, get_boards, get_board, get_images, add_image
+from comboard.image import ImageFinder, resize_image
 
 
 ALLOWED_EXTENSIONS = 'png jpeg jpg gif'.split()
-UPLOAD_FOLDER = os.path.join(app.root_path, 'static/uploads')
-app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
+UPLOAD_FOLDER = os.path.join(comboard_app.root_path, 'static/uploads')
 
 
 def is_allowed_filetype(filename):
     return '.' in filename and filename.split('.')[-1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route("/")
+@comboard_app.route("/")
 def index():
     return redirect(url_for('boards'))
 
 
-@app.route("/boards", methods=['GET', 'POST'])
+@comboard_app.route("/boards", methods=['GET', 'POST'])
 def boards():
     auto_populate = False
     error = board_name = ''
@@ -45,7 +44,7 @@ def boards():
                            error=error)
 
 
-@app.route("/boards/<board_id>", methods=['GET', 'POST'])
+@comboard_app.route("/boards/<board_id>", methods=['GET', 'POST'])
 def board(board_id):
     error = ''
     if request.method == 'POST':

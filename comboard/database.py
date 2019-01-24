@@ -1,14 +1,11 @@
 from flask import g
 import sqlite3
-from app import app
-
-DATABASE_FILE = 'data.db'
-app.config['DATABASE'] = DATABASE_FILE
+from comboard import comboard_app
 
 
 def get_db():
     if 'db' not in g:
-        g.db = sqlite3.connect(app.config['DATABASE'])
+        g.db = sqlite3.connect(comboard_app.config['DATABASE'])
         g.db.row_factory = sqlite3.Row
     return g.db
 
@@ -21,7 +18,7 @@ def close_db():
 
 def create_db():
     db = get_db()
-    with app.open_resource('schema.sql') as f:
+    with comboard_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf-8'))
 
 
