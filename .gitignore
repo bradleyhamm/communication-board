@@ -19,4 +19,4 @@ venv.bak/
 .pytest_cache/
 
 data.db
-static/uploads/
+comboard/static/uploads/

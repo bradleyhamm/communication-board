@@ -9,7 +9,6 @@ from comboard.image import ImageFinder, resize_image
 
 
 ALLOWED_EXTENSIONS = 'png jpeg jpg gif'.split()
-UPLOAD_FOLDER = os.path.join(comboard_app.root_path, 'static/uploads')
 
 
 def is_allowed_filetype(filename):
@@ -59,7 +58,7 @@ def board(board_id):
             else:
                 filename = '%s-%s' % (int(time.time()), secure_filename(file.filename))
                 add_image(filename, board_id)
-                file_path = os.path.join(UPLOAD_FOLDER, filename)
+                file_path = os.path.join(comboard_app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
                 resize_image(file_path)
                 return redirect(url_for('board', board_id=board_id))
