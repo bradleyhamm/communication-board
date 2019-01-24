@@ -10,11 +10,12 @@ from PIL import Image
 from comboard import comboard_app
 
 IMAGE_API_URL = 'https://openclipart.org/search/json/?query=%s'
+THUMBNAIL_DIMENSIONS = (250, 250)
 
 
 def resize_image(image_path):
     image = Image.open(image_path)
-    image.thumbnail((250, 250))
+    image.thumbnail(THUMBNAIL_DIMENSIONS)
     image.save(image_path, image.format)
 
 
